@@ -149,6 +149,15 @@ class FilterChain extends AbstractFilter implements Countable
      */
     public function attach($callback, $priority = self::DEFAULT_PRIORITY)
     {
+        if (is_object($callback) && ! $callback instanceof \Closure) {
+            if (! $callback instanceof FilterInterface) {
+                throw new Exception\InvalidArgumentException(sprintf(
+                    'Expected a valid FilterInterface; received "%s"',
+                    (is_object($callback) ? get_class($callback) : gettype($callback))
+                ));
+            }
+        }
+
         if (! is_callable($callback)) {
             if (! $callback instanceof FilterInterface) {
                 throw new Exception\InvalidArgumentException(sprintf(

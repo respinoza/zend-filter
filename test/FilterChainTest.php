@@ -56,6 +56,17 @@ class FilterChainTest extends TestCase
         $this->assertEquals('abc', $chain->filter($value));
     }
 
+    public function testAllowsConnectingOnlyFilterInterfaceObjects()
+    {
+        $this->expectException(\Zend\Filter\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected a valid FilterInterface; received "ZendTest\Filter\BogusFilterMock"');
+
+        $chain = new FilterChain();
+        $bogusFilter = new BogusFilterMock();
+
+        $chain->attach($bogusFilter);
+    }
+
     public function testAllowsConnectingViaClassShortName()
     {
         if (! function_exists('mb_strtolower')) {
